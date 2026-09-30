@@ -1,0 +1,59 @@
+{
+  "receipt_id": "acr_2026_09_30_001",
+  "created_at": "2026-09-30T11:30:00-04:00",
+  "principal": {
+    "type": "user",
+    "id": "product_owner",
+    "reviewer": "human_reviewer",
+    "revocation_path": "Stop the agent run and revoke browser session access."
+  },
+  "task": {
+    "summary": "Use a hosted browser to inspect a public documentation page and draft a summary.",
+    "success_criteria": [
+      "Only public documentation pages are opened.",
+      "No forms are submitted.",
+      "No authenticated workspace is accessed."
+    ],
+    "out_of_scope": [
+      "Purchasing",
+      "Publishing",
+      "Sending messages",
+      "Changing account settings"
+    ]
+  },
+  "action": {
+    "type": "click",
+    "state_changing": false,
+    "risk_level": "low"
+  },
+  "surface": {
+    "type": "browser",
+    "resource": "public documentation website",
+    "access_boundary": "Public pages only"
+  },
+  "model_route": {
+    "model": "gpt-6.1-sol",
+    "service_tier": "standard",
+    "subagent": "documentation-reviewer",
+    "fallback": "Pause and ask reviewer if authentication is requested."
+  },
+  "consent": {
+    "requested_scope": ["open public docs", "read page text", "draft summary"],
+    "granted_scope": ["open public docs", "read page text", "draft summary"],
+    "status": "granted",
+    "expires_at": "2026-09-30T12:30:00-04:00",
+    "approval_evidence": "Reviewer approved public-doc browsing only."
+  },
+  "evidence": {
+    "tool_calls": ["browser.open", "browser.read"],
+    "browser_steps": ["Opened docs home page", "Opened changelog page"],
+    "changed_resources": [],
+    "review_notes": ["No authenticated page reached."]
+  },
+  "recovery": {
+    "stop_rule": "Stop if sign-in, payment, publish, send, or upload appears.",
+    "rollback_path": "No external state change expected.",
+    "escalation_owner": "human_reviewer",
+    "review_queue": "agent-action-review"
+  }
+}

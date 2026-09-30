@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Consent Receipt",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "created_at",
+    "principal",
+    "task",
+    "action",
+    "surface",
+    "model_route",
+    "consent",
+    "evidence",
+    "recovery"
+  ],
+  "properties": {
+    "receipt_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "principal": {
+      "type": "object",
+      "required": ["type", "id", "reviewer"],
+      "properties": {
+        "type": { "type": "string" },
+        "id": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "revocation_path": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "task": {
+      "type": "object",
+      "required": ["summary", "success_criteria"],
+      "properties": {
+        "summary": { "type": "string" },
+        "success_criteria": { "type": "array", "items": { "type": "string" } },
+        "out_of_scope": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "action": {
+      "type": "object",
+      "required": ["type", "state_changing", "risk_level"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["read", "draft", "click", "write", "upload", "buy", "publish", "send", "execute", "merge", "delete", "notify"]
+        },
+        "state_changing": { "type": "boolean" },
+        "risk_level": { "type": "string", "enum": ["low", "medium", "high", "blocked"] }
+      },
+      "additionalProperties": true
+    },
+    "surface": {
+      "type": "object",
+      "required": ["type", "resource"],
+      "properties": {
+        "type": { "type": "string" },
+        "resource": { "type": "string" },
+        "access_boundary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "model_route": {
+      "type": "object",
+      "required": ["model"],
+      "properties": {
+        "model": { "type": "string" },
+        "service_tier": { "type": "string" },
+        "subagent": { "type": "string" },
+        "fallback": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "consent": {
+      "type": "object",
+      "required": ["requested_scope", "granted_scope", "status"],
+      "properties": {
+        "requested_scope": { "type": "array", "items": { "type": "string" } },
+        "granted_scope": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["missing", "granted", "expired", "revoked", "denied"] },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "approval_evidence": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "tool_calls": { "type": "array", "items": { "type": "string" } },
+        "browser_steps": { "type": "array", "items": { "type": "string" } },
+        "changed_resources": { "type": "array", "items": { "type": "string" } },
+        "review_notes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "recovery": {
+      "type": "object",
+      "required": ["stop_rule", "rollback_path", "escalation_owner"],
+      "properties": {
+        "stop_rule": { "type": "string" },
+        "rollback_path": { "type": "string" },
+        "escalation_owner": { "type": "string" },
+        "review_queue": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
